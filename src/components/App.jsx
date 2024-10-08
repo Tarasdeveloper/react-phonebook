@@ -1,66 +1,17 @@
 import Title from './Title/Title';
 import ContactsList from './ContactsList/ContactsList';
 import FormInputs from './FormInputs/FormInputs';
-import { nanoid } from 'nanoid';
 import Wrapper from './Wrapper/Wrapper';
 import Filter from './Filter/Filter';
-import { useEffect, useState } from 'react';
 
 function App() {
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
-
-  useEffect(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts) {
-      setContacts(JSON.parse(savedContacts));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (contacts.length > 0) {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-  }, [contacts]);
-
-  const addContact = data => {
-    const contact = {
-      id: nanoid(),
-      name: data.name,
-      number: data.number,
-    };
-
-    contacts.find(
-      elem => contact.name.toLowerCase() === elem.name.toLowerCase()
-    )
-      ? alert(`${contact.name} is already in contacts.`)
-      : setContacts([contact, ...contacts]);
-  };
-
-  const changeFilter = e => {
-    setFilter(e.currentTarget.value);
-  };
-
-  const deleteContact = contactId => {
-    setContacts(contacts.filter(contact => contact.id !== contactId));
-  };
-
-  const getFilteredContacts = () => {
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
-  };
-
   return (
     <Wrapper>
       <Title props="Phonebook" />
-      <FormInputs onSubmit={addContact} />
+      <FormInputs />
       <Title props="Contacts" />
-      <Filter value={filter} onChange={changeFilter} />
-      <ContactsList
-        contacts={getFilteredContacts()}
-        onDeleteContact={deleteContact}
-      />
+      <Filter />
+      <ContactsList />
     </Wrapper>
   );
 }

@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { FormInput, FormLabel } from './FormInputs.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from '../../redux/contactsReducer';
 
-const FormInputs = ({ onSubmit }) => {
+const FormInputs = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const contacts = useSelector(state => state.phonebook.contacts);
+  const dispatch = useDispatch();
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -17,10 +22,21 @@ const FormInputs = ({ onSubmit }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit({ name, number });
 
-    setName('');
-    setNumber('');
+    const newContact = {
+      name,
+      number,
+    };
+
+    if (contacts.find(contact => contact.name === name)) {
+      alert(`${name} is already in contacts.`);
+      return;
+    }
+
+    dispatch(addContact(newContact)); // Отправляем экшен для добавления нового контакта
+
+    setName(''); // Очищаем поле ввода имени
+    setNumber(''); // Очищаем поле ввода номера
   };
 
   return (
