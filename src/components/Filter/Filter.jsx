@@ -1,20 +1,20 @@
 import React from 'react';
 import { FilterLabel } from './Filter.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilter } from '../../redux/filterReducer';
+import { setFilterTerm } from '../../redux/contactsReducer';
 
 const Filter = () => {
   const dispatch = useDispatch();
-  const filterValue = useSelector(state => state.filters.filters);
+  const filterValue = useSelector(state => state.phonebook.filter);
 
   const handleFilterChange = e => {
     const value = e.target.value;
-    dispatch(setFilter(value)); // Отправляем значение в стор
+    dispatch(setFilterTerm(value)); // Отправляем значение в стор
   };
 
   return (
     <FilterLabel>
-      Find contacts by name
+      <p>Find contacts by name</p>
       <input type="text" value={filterValue} onChange={handleFilterChange} />
     </FilterLabel>
   );

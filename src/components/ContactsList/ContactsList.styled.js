@@ -7,6 +7,6 @@ export const ContactItem = styled.li`
 `;
 
 export const ContactList = styled.ul`
-  width: 350px;
+  /* width: 350px; */
   padding: 15px;
 `;

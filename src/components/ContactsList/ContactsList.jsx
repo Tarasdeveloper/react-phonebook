@@ -1,14 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { ContactItem, ContactList } from './ContactsList.styled';
-import { deleteContact } from '../../redux/contactsReducer';
+import { useEffect } from 'react';
+
+import { deleteContact, getContacts } from '../../redux/contactsReducer';
 
 const ContactsList = () => {
-  const contacts = useSelector(state => state.phonebook.contacts);
-  const filtered = useSelector(state => state.filters.filters);
+  const { contacts, filterTerm } = useSelector(state => state.phonebook);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getContacts());
+  }, [dispatch]);
+
   const filteredContacts = contacts?.filter(contact =>
-    contact.name.toLowerCase().includes(filtered.toLowerCase())
+    contact.name.toLowerCase().includes((filterTerm || '').toLowerCase())
   );
 
   const onDeleteContact = contactId => {
