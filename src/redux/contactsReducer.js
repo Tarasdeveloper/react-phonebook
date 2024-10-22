@@ -1,47 +1,6 @@
-import axios from 'axios';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import { addContact, deleteContact, getContacts } from './contactsActions';
 
-axios.defaults.baseURL = 'https://6713be1f690bf212c75f994f.mockapi.io';
-
-// Async actions (thunks)
-export const getContacts = createAsyncThunk(
-  'phonebook/getContacts',
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.get('/contacts');
-      return data;
-    } catch (err) {
-      return rejectWithValue(err.message);
-    }
-  }
-);
-
-export const deleteContact = createAsyncThunk(
-  'phonebook/deleteContact',
-  async (contactId, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.delete(`/contacts/${contactId}`);
-      return data;
-    } catch (err) {
-      return rejectWithValue(err.message);
-    }
-  }
-);
-
-export const addContact = createAsyncThunk(
-  'phonebook/addContact',
-  async (body, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.post('/contacts', body);
-      const { id, name, number } = data;
-      return { id, name, number };
-    } catch (err) {
-      return rejectWithValue(err.message);
-    }
-  }
-);
-
-// Slice
 const phonebookSlice = createSlice({
   name: 'phonebook',
   initialState: {
