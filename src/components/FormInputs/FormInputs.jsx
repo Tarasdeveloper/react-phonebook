@@ -1,15 +1,20 @@
 import { useState } from 'react';
 import { FormInput, FormLabel } from './FormInputs.styled';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/contactsActions';
-// import { addContact } from '../../redux/contactsReducer';
+// import { useSelector } from 'react-redux';
+import {
+  useAddContactMutation,
+  useGetContactsQuery,
+} from '../../redux/contactsQuery';
+// import { addContact } from '../../redux/contactsActions';
 
 const FormInputs = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const contacts = useSelector(state => state.phonebook.contacts);
-  const dispatch = useDispatch();
+  // const contacts = useSelector(state => state.phonebook.contacts);
+  // const dispatch = useDispatch();
+  const { data: contacts = [], error, isLoading } = useGetContactsQuery();
+  const [addContact] = useAddContactMutation();
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -21,7 +26,7 @@ const FormInputs = () => {
     }
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     const newContact = {
@@ -29,15 +34,23 @@ const FormInputs = () => {
       number,
     };
 
+    if (isLoading) {
+      alert('Contacts are still loading. Please wait.');
+      return;
+    }
+
     if (contacts.find(contact => contact.name === name)) {
       alert(`${name} is already in contacts.`);
       return;
     }
-
-    dispatch(addContact(newContact)); //  экшен для нового контакта
-
-    setName(''); // Очищаем поле ввода имени
-    setNumber(''); // Очищаем поле ввода номера
+    try {
+      await addContact(newContact).unwrap();
+      // dispatch(addContact(newContact));
+      setName(''); // Очищаем поле ввода имени
+      setNumber(''); // Очищаем поле ввода номера
+    } catch {
+      console.error('Failed to add contact: ', error);
+    }
   };
 
   return (

@@ -1,11 +1,10 @@
-import React from 'react';
 import { FilterLabel } from './Filter.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilterTerm } from '../../redux/contactsReducer';
 
 const Filter = () => {
   const dispatch = useDispatch();
-  const filterValue = useSelector(state => state.phonebook.filter);
+  const filterValue = useSelector(state => state.phonebook.filterTerm);
 
   const handleFilterChange = e => {
     const value = e.target.value;
